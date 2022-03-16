@@ -1,9 +1,14 @@
 package shop;
 
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
+import org.testng.Assert;
 
-import static org.junit.jupiter.api.Assertions.*;
+//import static Utils.Constants.FILE_NAME_LIST;
+import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+//import static parser.JsonParserTest.carts;
 
 class CartTest {
 
@@ -13,7 +18,7 @@ class CartTest {
         String expectedName = "test-cart";
         Cart testCart = new Cart(expectedName);
 
-        assertAll("Cart name and price after cart creation",
+        Assertions.assertAll("Cart name and price after cart creation",
                 () -> assertEquals(expectedName, testCart.getCartName()),
                 () -> assertEquals(0, testCart.getTotalPrice())
         );
@@ -35,5 +40,14 @@ class CartTest {
         double actualTotal = testCart.getTotalPrice();
 
         assertEquals( expectedTotal, actualTotal, 0);
+    }
+    @Tag("CartTest")
+    @Test
+    public void deleteRealItem(){
+        Cart cart = new Cart("test-cart");
+        RealItem realItem = new RealItem();
+        cart.addRealItem(realItem);
+        cart.deleteRealItem(realItem);
+        Assert.assertTrue(cart.getTotalPrice() == 0);
     }
 }
