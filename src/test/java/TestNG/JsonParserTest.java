@@ -1,16 +1,14 @@
-package parser;
-
+package TestNG;
+import org.testng.Assert;
+import org.testng.annotations.*;
 import com.github.javafaker.Faker;
 import com.google.gson.Gson;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.Disabled;
-import org.junit.jupiter.api.Tag;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.ValueSource;
-import org.testng.Assert;
+import org.testng.annotations.Test;
+import parser.JsonParser;
+import parser.NoSuchFileException;
 import shop.Cart;
 import shop.RealItem;
 import shop.VirtualItem;
@@ -25,10 +23,8 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class JsonParserTest {
-
     private final JsonParser jsonParser = new JsonParser();
 
     private final String fileName = "test-cart";
@@ -37,9 +33,7 @@ public class JsonParserTest {
     private Faker faker = new Faker();
     String name = faker.name().fullName();
 
-    @Disabled("Disabled test")
-    @Tag("JSTest")
-    @Test
+    @Test(testName = "Write to file - empty cart", groups = { "group1" }, enabled = false)
     public void writeEmptyCartTest() {
         Cart testCart = new Cart(fileName);
         jsonParser.writeToFile(testCart);
@@ -51,14 +45,14 @@ public class JsonParserTest {
             JSONArray virtualItems = new JSONArray();
             jsonObject.put("virtualItems",virtualItems);
             jsonObject.put("total",0.0);
-            assertEquals(jsonObject, new String(Files.readAllBytes(Paths.get(String.format(filePath, fileName)))));
+
+            Assert.assertEquals(jsonObject, new String(Files.readAllBytes(Paths.get(String.format(filePath, fileName)))));
         } catch (Exception ex) {
             ex.printStackTrace();
         }
     }
 
-    @Tag("JSTest")
-    @Test
+    @Test(testName = "Read from file", groups = { "group2" })
     public void readValidTest() {
         Cart testCart = createCart();
         File file = new File(String.format(filePath, fileName));
@@ -74,12 +68,16 @@ public class JsonParserTest {
         }
     }
 
-    @Tag("JSTest")
-    @ParameterizedTest
-    @ValueSource(strings = {"test-cart.json", "vadim-cart.txt", "eugen-cart.json", ".artem-cart", "project-cart.json "})
+    @Test(testName = "Read from file with incorrect name", groups = { "group2" }, dataProvider = "test1")
     public void readInvalidTest(String fileName) {
         File file = new File(String.format(filePath, fileName));
-        assertThrows(NoSuchFileException.class, () -> jsonParser.readFromFile(file));
+
+        Assert.assertThrows(NoSuchFileException.class,() -> jsonParser.readFromFile(file));
+    }
+
+    @DataProvider(name = "test1")
+    public Object[][] createData() {
+        return new Object[][]{{"test-cart.json"}, {"vadim-cart.txt"}, {"eugen-cart.json"}, {".artem-cart"}, {"project-cart.json "}};
     }
 
     @AfterEach
@@ -110,5 +108,4 @@ public class JsonParserTest {
 
         return testCart;
     }
-
 }
