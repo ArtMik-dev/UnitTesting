@@ -1,5 +1,6 @@
 package TestNG;
 
+import com.github.javafaker.Faker;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 import shop.RealItem;
@@ -8,9 +9,12 @@ import shop.RealItem;
 
 
 public class RealItemTest {
+
+    private Faker faker = new Faker();
+
     @Test(testName = "Verify String", groups = { "group1" })
     public void checkRealItemString() {
-        String expectedName = "name";
+        String expectedName = String.valueOf(faker.name());
         double expectedWeight = 2;
 
         RealItem realItem = new RealItem();

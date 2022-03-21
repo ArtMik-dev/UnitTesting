@@ -1,6 +1,7 @@
 package TestNG;
 
 
+import com.github.javafaker.Faker;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 import org.testng.asserts.SoftAssert;
@@ -8,10 +9,11 @@ import shop.Cart;
 import shop.RealItem;
 
 public class CartTest {
+    private Faker faker = new Faker();;
 
     @Test(testName = "Check name and total price", groups = {"group2"})
        void cartNameAndPriceTest() {
-        String expectedName = "test-cart";
+        String expectedName = String.valueOf(faker.name());
         Cart testCart = new Cart(expectedName);
 
         SoftAssert softAssert = new SoftAssert();
@@ -23,7 +25,7 @@ public class CartTest {
 
     @Test(groups = "CalculateTotal")
     void calculateTotalTest() {
-        String expectedName = "test-cart";
+        String expectedName = String.valueOf(faker.animal());
         double itemPrice = 5;
         double TAX = 0.2;
 
@@ -44,6 +46,6 @@ public class CartTest {
         RealItem realItem = new RealItem();
         cart.addRealItem(realItem);
         cart.deleteRealItem(realItem);
-        Assert.assertTrue(cart.getTotalPrice() == 0);
+        Assert.assertEquals(0,cart.getTotalPrice());
     }
 }
