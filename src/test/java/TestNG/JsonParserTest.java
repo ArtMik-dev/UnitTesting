@@ -34,7 +34,7 @@ public class JsonParserTest {
 
 
     @Test(testName = "Write to file - empty cart", groups = { "group1" })
-    public void writeEmptyCartTest() {
+    public void writeEmptyCartTest() {//В этом тесте идут значения в разнобой, как я писал ранее
         Cart testCart = new Cart("test-cart");
         jsonParser.writeToFile(testCart);
         try {
@@ -48,7 +48,7 @@ public class JsonParserTest {
 
             Assert.assertEquals(jsonObject, new String(Files.readAllBytes(Paths.get(String.format(filePath, "test-cart")))));
         } catch (IOException thrown) {
-            Assert.fail("");
+            Assert.fail("Test failed");
         }
     }
 
