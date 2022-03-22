@@ -26,30 +26,30 @@ import static org.junit.jupiter.api.Assertions.*;
 public class JsonParserTest {
 
     private final JsonParser jsonParser = new JsonParser();
-
-    private final String fileName = "test-cart";
+    private Faker faker = new Faker();
+    private final String fileName = String.valueOf(faker.name());
     private final String filePath = "./src/main/resources/%s.json";
 
-    private Faker faker = new Faker();
-    String name = faker.name().fullName();
+
+
 
     @Disabled("Disabled test")
     @Tag("JSTest")
     @Test
     public void writeEmptyCartTest() {
-        Cart testCart = new Cart(fileName);
+        Cart testCart = new Cart("test-cart");
         jsonParser.writeToFile(testCart);
         try {
             JSONObject jsonObject = new JSONObject();
-            jsonObject.put("cartName","test-cart");
             JSONArray realItems = new JSONArray();
-            jsonObject.put("realItems",realItems);
             JSONArray virtualItems = new JSONArray();
+            jsonObject.put("cartName","test-cart");
+            jsonObject.put("realItems",realItems);
             jsonObject.put("virtualItems",virtualItems);
             jsonObject.put("total",0.0);
-            assertEquals(jsonObject, new String(Files.readAllBytes(Paths.get(String.format(filePath, fileName)))));
-        } catch (Exception ex) {
-            ex.printStackTrace();
+            Assertions.assertEquals(jsonObject, new String(Files.readAllBytes(Paths.get(String.format(filePath, "test-cart")))));
+        } catch (IOException thrown) {
+            Assertions.fail("Test failed");
         }
     }
 
@@ -58,15 +58,18 @@ public class JsonParserTest {
     public void readValidTest() {
         Cart testCart = createCart();
         File file = new File(String.format(filePath, fileName));
-        try{
+        try {
             Gson gson = new Gson();
             Writer writer = new FileWriter(file);
             gson.toJson(testCart, writer);
             writer.close();
-            assertEquals(testCart.getCartName(), jsonParser.readFromFile(file).getCartName());
-            assertEquals(testCart.getTotalPrice(), jsonParser.readFromFile(file).getTotalPrice());
-        }catch (IOException e) {
-            e.printStackTrace();
+            Cart newCart = jsonParser.readFromFile(file);
+            Assertions.assertAll(" ",
+                    () -> assertEquals(testCart.getCartName(), newCart.getCartName()),
+                    () -> assertEquals(testCart.getTotalPrice(), newCart.getTotalPrice())
+            );
+        } catch (IOException thrown) {
+            Assertions.fail("Test failed");
         }
     }
 

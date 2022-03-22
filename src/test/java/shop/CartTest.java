@@ -1,5 +1,6 @@
 package shop;
 
+import com.github.javafaker.Faker;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
@@ -12,10 +13,12 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class CartTest {
 
+    private Faker faker = new Faker();
+
     @Tag("CartTest")
     @Test
     void cartNameAndPriceTest() {
-        String expectedName = "test-cart";
+        String expectedName = String.valueOf(faker.name());
         Cart testCart = new Cart(expectedName);
 
         Assertions.assertAll("Cart name and price after cart creation",
@@ -27,7 +30,7 @@ class CartTest {
     @Tag("CartTest")
     @Test
     void calculateTotalTest() {
-        String expectedName = "test-cart";
+        String expectedName = String.valueOf(faker.name());
         double itemPrice = 5;
         double TAX = 0.2;
 
@@ -39,15 +42,16 @@ class CartTest {
         double expectedTotal = itemPrice + itemPrice*TAX;
         double actualTotal = testCart.getTotalPrice();
 
-        assertEquals( expectedTotal, actualTotal, 0);
+        assertEquals(expectedTotal, actualTotal, 0);
     }
     @Tag("CartTest")
     @Test
     public void deleteRealItem(){
-        Cart cart = new Cart("test-cart");
+        String expectedName = String.valueOf(faker.name());
+        Cart cart = new Cart(expectedName);
         RealItem realItem = new RealItem();
         cart.addRealItem(realItem);
         cart.deleteRealItem(realItem);
-        Assert.assertTrue(cart.getTotalPrice() == 0);
+        Assertions.assertEquals(0,cart.getTotalPrice());
     }
 }
