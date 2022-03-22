@@ -2,8 +2,12 @@ package parser;
 
 import com.google.gson.Gson;
 import shop.Cart;
+import shop.RealItem;
+import shop.VirtualItem;
 
 import java.io.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class JsonParser implements Parser {
 
@@ -32,4 +36,5 @@ public class JsonParser implements Parser {
 
         return null;
     }
+
 }

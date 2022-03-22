@@ -1,28 +1,29 @@
-package shop;
+package TestNG;
 
 import com.github.javafaker.Faker;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Tag;
-import org.junit.jupiter.api.Test;
+import org.testng.Assert;
+import org.testng.annotations.Test;
+import shop.RealItem;
 
-import static org.junit.jupiter.api.Assertions.*;
 
-class RealItemTest {
 
-    Faker faker = new Faker();
 
-    @Test
+public class RealItemTest {
+
+    private Faker faker = new Faker();
+
+    @Test(testName = "Verify String", groups = { "group1" })
     public void checkRealItemString() {
         String expectedName = String.valueOf(faker.name());
         double expectedWeight = 2;
 
         RealItem realItem = new RealItem();
         realItem.setName(expectedName);
-        realItem.setWeight(2);
+        realItem.setWeight(expectedWeight);
 
         String expectedString = String.format("Class: class shop.RealItem; Name: %s; Price: %s; Weight: %s", expectedName,
                 0.0, expectedWeight);
 
-        assertEquals(expectedString, realItem.toString());
+        Assert.assertEquals(expectedString, realItem.toString());
     }
 }

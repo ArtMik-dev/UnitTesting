@@ -1,5 +1,7 @@
 package shop;
 
+import com.github.javafaker.Avatar;
+
 import java.util.ArrayList;
 import java.util.List;
 
