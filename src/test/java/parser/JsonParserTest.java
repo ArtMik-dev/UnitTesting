@@ -36,7 +36,7 @@ public class JsonParserTest {
     @Disabled("Disabled test")
     @Tag("JSTest")
     @Test
-    public void writeEmptyCartTest() {
+    public void writeEmptyCartTest() { //  В этом тесте идут значения в разнобой, как я писал ранее
         Cart testCart = new Cart("test-cart");
         jsonParser.writeToFile(testCart);
         try {
