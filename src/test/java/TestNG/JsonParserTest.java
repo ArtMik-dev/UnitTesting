@@ -46,9 +46,9 @@ public class JsonParserTest {
             jsonObject.put("virtualItems",virtualItems);
             jsonObject.put("total",0.0);
 
-            Assert.assertEquals(jsonObject, new String(Files.readAllBytes(Paths.get(String.format(filePath, fileName)))));
+            Assert.assertEquals(jsonObject, new String(Files.readAllBytes(Paths.get(String.format(filePath, "test-cart")))));
         } catch (IOException thrown) {
-            Assert.assertNotEquals("", thrown.getMessage());
+            Assert.fail("");
         }
     }
 
@@ -61,12 +61,13 @@ public class JsonParserTest {
             Writer writer = new FileWriter(file);
             gson.toJson(testCart, writer);
             writer.close();
+            Cart newCart = jsonParser.readFromFile(file);
             Assertions.assertAll(" ",
-                    () -> assertEquals(testCart.getCartName(), jsonParser.readFromFile(file).getCartName()),
-                    () -> assertEquals(testCart.getTotalPrice(), jsonParser.readFromFile(file).getTotalPrice())
+                    () -> assertEquals(testCart.getCartName(), newCart.getCartName()),
+                    () -> assertEquals(testCart.getTotalPrice(), newCart.getTotalPrice())
             );
         }catch (IOException thrown) {
-            Assert.assertNotEquals("", thrown.getMessage());
+            Assert.fail("Test failed");
         }
     }
 

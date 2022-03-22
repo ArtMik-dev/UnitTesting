@@ -2,30 +2,30 @@ package parser;
 
 import com.github.javafaker.Faker;
 import com.google.gson.Gson;
+import org.json.JSONException;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.testng.Assert;
+import org.testng.AssertJUnit;
 import shop.Cart;
 import shop.RealItem;
 import shop.VirtualItem;
 
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.Writer;
+import java.io.*;
 import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Collections;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class JsonParserTest {
-    //Faker faker;
+
     private Faker faker = new Faker();
     private final JsonParser jsonParser = new JsonParser();
 
@@ -38,6 +38,7 @@ public class JsonParserTest {
     public void writeEmptyCartTest() {
         Cart testCart = new Cart("test-cart");
         jsonParser.writeToFile(testCart);
+
         try {
             JSONObject jsonObject = new JSONObject();
             jsonObject.put("cartName","test-cart");
@@ -46,9 +47,10 @@ public class JsonParserTest {
             JSONArray virtualItems = new JSONArray();
             jsonObject.put("virtualItems",virtualItems);
             jsonObject.put("total",0.0);
-            assertEquals(jsonObject, new String(Files.readAllBytes(Paths.get(String.format(filePath, fileName)))));
+
+            Assert.assertEquals(jsonObject, new String(Files.readAllBytes(Paths.get(String.format(filePath, fileName)))));
         } catch (IOException thrown) {
-            Assert.assertNotEquals("", thrown.getMessage());
+            Assert.fail("");
         }
     }
 
@@ -62,12 +64,15 @@ public class JsonParserTest {
             Writer writer = new FileWriter(file);
             gson.toJson(testCart, writer);
             writer.close();
+            JsonParser parser = new JsonParser();
+            parser.readFromFile(file);
+            Cart newCart = jsonParser.readFromFile(file);
             Assertions.assertAll(" ",
-                    () -> assertEquals(testCart.getCartName(), jsonParser.readFromFile(file).getCartName()),
-                    () -> assertEquals(testCart.getTotalPrice(), jsonParser.readFromFile(file).getTotalPrice())
+                    () -> assertEquals(testCart.getCartName(), newCart.getCartName()),
+                    () -> assertEquals(testCart.getTotalPrice(),newCart.getTotalPrice())
             );
         }catch (IOException thrown) {
-            Assert.assertNotEquals("", thrown.getMessage());
+            Assertions.fail("");
         }
     }
 

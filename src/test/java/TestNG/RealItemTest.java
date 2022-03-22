@@ -19,7 +19,7 @@ public class RealItemTest {
 
         RealItem realItem = new RealItem();
         realItem.setName(expectedName);
-        realItem.setWeight(2);
+        realItem.setWeight(expectedWeight);
 
         String expectedString = String.format("Class: class shop.RealItem; Name: %s; Price: %s; Weight: %s", expectedName,
                 0.0, expectedWeight);

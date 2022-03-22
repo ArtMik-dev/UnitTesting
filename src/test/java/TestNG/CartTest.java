@@ -42,10 +42,11 @@ public class CartTest {
 
     @Test(groups={"deleteRealItem"})
     public void deleteRealItem(){
-        Cart cart = new Cart("test-cart");
+        String expectedName = String.valueOf(faker.name());
+        Cart testCart = new Cart(expectedName);
         RealItem realItem = new RealItem();
-        cart.addRealItem(realItem);
-        cart.deleteRealItem(realItem);
-        Assert.assertEquals(0,cart.getTotalPrice());
+        testCart.addRealItem(realItem);
+        testCart.deleteRealItem(realItem);
+        Assert.assertEquals(0,testCart.getTotalPrice());
     }
 }
