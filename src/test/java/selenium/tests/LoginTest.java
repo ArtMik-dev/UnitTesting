@@ -1,7 +1,6 @@
 package selenium.tests;
 
 import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.openqa.selenium.By;
@@ -11,7 +10,6 @@ import org.openqa.selenium.chrome.ChromeDriver;
 
 import java.util.concurrent.TimeUnit;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class LoginTest {
@@ -21,11 +19,11 @@ public class LoginTest {
     @BeforeEach
     void setup() {
         driver.manage().window().maximize();
-        driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
+        driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
     }
 
     @Test
-    void loginTest() throws InterruptedException {
+    void loginTest() {
         driver.get("https://mail.yandex.com");
         WebElement generalLoginButton = driver.findElement(By.xpath("//*[@id=\"index-page-container\"]/div/div[2]/div/div/div[4]/a[2]"));
         generalLoginButton.click();
@@ -36,9 +34,9 @@ public class LoginTest {
         WebElement password = driver.findElement(By.id("passp-field-passwd"));
         password.sendKeys("accountfortestss1!");
         WebElement loginButton2 = driver.findElement(By.id("passp:sign-in"));
-        Thread.sleep(2000);
         loginButton2.click();
-        assertEquals(true, driver.findElement(By.xpath("//a/span[@class='user-account__name'][contains(text(),'accountfortestss')]")).isDisplayed());
+        assertTrue(driver.findElement(By.xpath("//a/span[@class='user-account__name'][contains(text(),'accountfortestss')]"))
+                .isDisplayed(), "Element isn't displayed");
 
     }
 
