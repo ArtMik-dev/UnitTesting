@@ -9,9 +9,9 @@ import java.time.Duration;
 
 public class LoginPage extends BasePage {
 
-    private final String URL = "https://mail.yandex.com/";
+    private final String url = "https://mail.yandex.com/";
 
-    @FindBy(xpath = "//div[@class = 'HeadBanner-ButtonsWrapper']//a[2]")
+    @FindBy(css = "a.button2_theme_mail-white")
     WebElement generalLoginButton;
 
     @FindBy(id = "passp:sign-in")
@@ -20,7 +20,7 @@ public class LoginPage extends BasePage {
     @FindBy(xpath = "//div[@class = 'passp-login-form']//input[@name= 'login']")
     WebElement usernameField;
 
-    @FindBy(css = "#passp-field-passwd")
+    @FindBy(id = "passp-field-passwd")
     WebElement passwordField;
 
     @FindBy(className = "PSHeader-User")
@@ -32,8 +32,8 @@ public class LoginPage extends BasePage {
     }
 
     @Override
-    protected String GetURL() {
-        return URL;
+    protected String getUrl() {
+        return url;
     }
 
     public void login(String username, String password) {

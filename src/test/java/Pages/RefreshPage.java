@@ -9,7 +9,7 @@ import java.time.Duration;
 
 public class RefreshPage extends BasePage {
 
-    private final String URL = "https://demo.seleniumeasy.com/bootstrap-download-progress-demo.html";
+    private final String url = "https://demo.seleniumeasy.com/bootstrap-download-progress-demo.html";
 
     @FindBy(css = "#cricle-btn")
     WebElement downloadButton;
@@ -22,8 +22,8 @@ public class RefreshPage extends BasePage {
     }
 
     @Override
-    protected String GetURL() {
-        return URL;
+    protected String getUrl() {
+        return url;
     }
 
     public void startDownload() {
@@ -32,7 +32,7 @@ public class RefreshPage extends BasePage {
 
     public void waitUntilPercent(int percent) {
         WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(20));
-        wait.pollingEvery(Duration.ofMillis(10));
+        wait.pollingEvery(Duration.ofMillis(1000));
         wait.until(driver -> percentElement.getText().equals(percent + "%"));
     }
 

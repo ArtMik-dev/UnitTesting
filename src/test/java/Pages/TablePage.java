@@ -11,7 +11,7 @@ import java.util.List;
 
 public class TablePage extends BasePage {
 
-    private final String URL = "https://demo.seleniumeasy.com/table-sort-search-demo.html";
+    private final String url = "https://demo.seleniumeasy.com/table-sort-search-demo.html";
 
     @FindBy(css = "select[name = 'example_length']")
     WebElement selectEntriesCountElement;
@@ -29,51 +29,59 @@ public class TablePage extends BasePage {
     }
 
     @Override
-    protected String GetURL() {
-        return URL;
+    protected String getUrl() {
+        return url;
     }
 
-    public void selectEntriesCount(int count) {
-        Select selectElement = new Select(selectEntriesCountElement);
-        selectElement.selectByValue(String.valueOf(count));
+    public void selectEntriesCount() {
+        By showEntries = By.cssSelector("select[name = 'example_length']");
+        Select numberOfRowsDropdown = new Select(driver.findElement(showEntries));
+        numberOfRowsDropdown.selectByValue("10");
     }
 
-    public List<Employee> selectEntries(int ageMin, double salaryMax) {
-        List<Employee> employees = new ArrayList<>();
+    public List<WebElement> tableRowElements() {
+        List<WebElement> allInfo = driver.findElements(By.xpath(".//tbody//tr"));
+        return allInfo;
+    }
 
-        do {
-            employees.addAll(selectEmployees(tableRowElements, ageMin, salaryMax));
+    public List<EmployeeAll> getEmployeeInfo(List<WebElement> allInfo) {
+        List<EmployeeAll> employeeAllInfo = new ArrayList<>();
+        for (WebElement employeeInfo : allInfo) {
+            String name = employeeInfo.findElement(By.xpath("./td[1]")).getText();
+            String position = employeeInfo.findElement(By.xpath("./td[2]")).getText();
+            String office = employeeInfo.findElement(By.xpath("./td[3]")).getText();
+            int age = Integer.parseInt(employeeInfo.findElement(By.xpath("./td[4]")).getText());
+            String startDate = employeeInfo.findElement(By.xpath("./td[5]")).getText();
+            String salaryString = employeeInfo.findElement(By.xpath("./td[6]")).getText();
+            salaryString = salaryString.substring(1, salaryString.length() - 2).replaceAll(",", "");
+            int salary = Integer.parseInt(salaryString);
+            employeeAllInfo.add(new EmployeeAll(name, position, office, age, startDate, salary));
+        }
+        return employeeAllInfo;
+    }
 
-            if (!nextButton.isDisplayed()) {
-                nextButton.click();
-            } else {
-                break;
+    public List<Employee> selectEmployeeByAgeAndSalary(List<EmployeeAll> employeeAllInfo) {
+        List<Employee> selectedEmployees = new ArrayList<>();
+        for (EmployeeAll employee : employeeAllInfo) {
+            if (employee.getAge() > 30 && employee.getSalary() < 200000) {
+                selectedEmployees.add(new Employee(employee.getName(), employee.getPosition(), employee.getOffice()));
             }
         }
-        while (true);
-
-        return employees;
+        return selectedEmployees;
     }
 
-    private List<Employee> selectEmployees(List<WebElement> rows, int ageMin, double salaryMax) {
-        List<Employee> employees = new ArrayList<>();
-
-        for (int i = 1; i <= rows.size(); i++) {
-
-            int age = Integer.valueOf(driver.findElement(By.xpath(String.format(tableElementFormat, i, "td[4]"))).getText());
-            String salaryText = driver.findElement(By.xpath(String.format(tableElementFormat, i, "td[6]"))).getText();
-            double salary = Double.valueOf(salaryText.substring(1, salaryText.length() - 2).replaceAll(",", ""));
-
-            if (age >= ageMin && salary <= salaryMax) {
-
-                String name = driver.findElement(By.xpath(String.format(tableElementFormat, i, "td[1]"))).getText();
-                String position = driver.findElement(By.xpath(String.format(tableElementFormat, i, "td[2]"))).getText();
-                String office = driver.findElement(By.xpath(String.format(tableElementFormat, i, "td[3]"))).getText();
-
-                employees.add(new Employee(name, position, office));
-            }
+    public List<EmployeeAll> getInfoFromAllPages() {
+        TablePage tablePage = new TablePage(driver);
+        List<EmployeeAll> allInfoAboutEmployee = new ArrayList<>();
+        while (true) {
+            List<WebElement> rows = tablePage.tableRowElements();
+            List<EmployeeAll> employeeInfoFromOnePage = tablePage.getEmployeeInfo(rows);
+            allInfoAboutEmployee.addAll(employeeInfoFromOnePage);
+            if ((!driver.findElement(By.id("example_next")).getAttribute("class").contains("disabled"))) {
+                driver.findElement(By.id("example_next")).click();
+            } else break;
         }
-
-        return employees;
+        return allInfoAboutEmployee;
     }
 }
+

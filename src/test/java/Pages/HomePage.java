@@ -18,8 +18,8 @@ public class HomePage extends BasePage {
     }
 
     @Override
-    protected String GetURL() {
-        return URL;
+    protected String getUrl() {
+        return url;
     }
 
     public void logout() {

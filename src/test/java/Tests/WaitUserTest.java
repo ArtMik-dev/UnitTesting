@@ -14,7 +14,7 @@ public class WaitUserTest extends BaseTest{
     @Test
     public void waitUser() {
         WaitUserPage waitUserPage = new WaitUserPage(driver);
-        waitUserPage.GoToURL();
+        waitUserPage.goToUrl();
         By button = By.xpath("//button[@id='save']");
         By photo = By.xpath("//div[@id='loading']/img");
         driver.findElement(button).click();

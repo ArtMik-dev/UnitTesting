@@ -12,7 +12,7 @@ public class RefreshTest extends BaseTest{
     void progressBarTest() {
 
         RefreshPage refreshPage = new RefreshPage(driver);
-        refreshPage.GoToURL();
+        refreshPage.goToUrl();
         refreshPage.startDownload();
         refreshPage.waitUntilPercent(50);
 

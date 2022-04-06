@@ -15,7 +15,7 @@ public class LoginTest extends BaseTest {
     void loginTest(String username, String password) {
 
         LoginPage loginPage = new LoginPage(driver);
-        loginPage.GoToURL();
+        loginPage.goToUrl();
         loginPage.login(username, password);
 
         HomePage homePage = new HomePage(driver);
