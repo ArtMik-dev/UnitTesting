@@ -9,6 +9,7 @@ import org.openqa.selenium.By;
 public class AlertTests extends BaseTest{
 
     public static final String BY_XPATH = "//p[@id='confirm-demo']//preceding-sibling::button";
+    public static final String SEND_KEYS = "Test";
 
 
 
@@ -42,7 +43,7 @@ public class AlertTests extends BaseTest{
         By buttonClickForPromptText = By.xpath("//p[@id='prompt-demo']//preceding-sibling::button");
         driver.findElement(buttonClickForPromptText).click();
         Alert alert = driver.switchTo().alert();
-        alert.sendKeys("Test");
+        alert.sendKeys(SEND_KEYS);
         alert.accept();
         String actualText = driver.findElement(By.xpath("//p[@id='prompt-demo']")).getText();
         Assertions.assertEquals("You have entered 'Test' !", actualText);

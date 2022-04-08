@@ -11,6 +11,7 @@ import java.util.List;
 
 public class TablePage extends BasePage {
 
+
     private final String url = "https://demo.seleniumeasy.com/table-sort-search-demo.html";
 
     @FindBy(css = "select[name = 'example_length']")
@@ -62,8 +63,10 @@ public class TablePage extends BasePage {
 
     public List<Employee> selectEmployeeByAgeAndSalary(List<EmployeeAll> employeeAllInfo) {
         List<Employee> selectedEmployees = new ArrayList<>();
+        int ageMin = 30;
+        int salaryMax = 200000;
         for (EmployeeAll employee : employeeAllInfo) {
-            if (employee.getAge() > 30 && employee.getSalary() < 200000) {
+            if (employee.getAge() > ageMin && employee.getSalary() < salaryMax) {
                 selectedEmployees.add(new Employee(employee.getName(), employee.getPosition(), employee.getOffice()));
             }
         }

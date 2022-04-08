@@ -25,6 +25,8 @@ public class LoginPage extends BasePage {
 
     @FindBy(className = "PSHeader-User")
     WebElement accountName;
+    @FindBy(css = "aa.user-account_left-name>span:nth-child(1)")
+    WebElement clickUserNameLink;
 
 
     public LoginPage(WebDriver driver) {
