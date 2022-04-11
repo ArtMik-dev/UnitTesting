@@ -34,7 +34,7 @@ public class BaseStep {
         String fileName = format.format(dateNow) + ".png";
         File screenShot = ((TakesScreenshot) (driver)).getScreenshotAs(OutputType.FILE);
         try {
-            FileUtils.copyFile(screenShot, new File("D:\\Screenshots\\" + fileName));
+            FileUtils.copyFile(screenShot, new File("./target/screenshots/" + fileName));
         } catch (IOException e) {
             e.printStackTrace();
         }
