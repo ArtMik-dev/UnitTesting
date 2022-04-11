@@ -6,6 +6,8 @@ import org.openqa.selenium.support.FindBy;
 
 public class MainPage extends BaseStepPage {
 
+    WebDriver driver;
+
     private final String url = "https://mail.yandex.com/";
 
     @FindBy(css = "a.button2_theme_mail-white")
@@ -22,8 +24,7 @@ public class MainPage extends BaseStepPage {
     @FindBy(css = "button#passp\\:sign-in")
     private WebElement submitButton;
 
-    @FindBy(css = "a.legouser__menu-item_action_exit")
-    private WebElement logoutButton;
+
     @FindBy(css = "a.user-account_left-name>div>img")
     private WebElement userNameLinkLogedIn;
 
@@ -31,15 +32,11 @@ public class MainPage extends BaseStepPage {
     private WebElement userNameText;
 
     public MainPage(WebDriver driver) {
-        super(driver);
+        this.driver = driver;
     }
 
     public String getUserNameLinkText() {
         return userNameText.getText();
-    }
-
-    public String getSignIn() {
-        return signIn.getText();
     }
 
     @Override
@@ -47,7 +44,7 @@ public class MainPage extends BaseStepPage {
         return url;
     }
 
-    public void login(String userName, String password) {
+    public MainPage login(String userName, String password) {
         generalButton.click();
         loginField.clear();
         loginField.sendKeys(userName);
@@ -55,10 +52,6 @@ public class MainPage extends BaseStepPage {
 
         passwordField.sendKeys(password);
         submitButton.click();
-    }
-
-    public void logout() {
-        userNameLinkLogedIn.click();
-        logoutButton.click();
+        return new MainPage(driver);
     }
 }

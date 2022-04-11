@@ -5,6 +5,7 @@ import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.firefox.FirefoxDriver;
 
+import java.time.Duration;
 import java.util.Optional;
 
 public class DriverSingleton {
@@ -13,15 +14,15 @@ public class DriverSingleton {
 
     private ThreadLocal<WebDriver> webDriver = new ThreadLocal<>();
 
-    private DriverSingleton(){
+    private DriverSingleton() {
     }
 
-    public static DriverSingleton getInstance(){
+    public static DriverSingleton getInstance() {
         DriverSingleton localInstance = instance;
         if (localInstance == null) {
             synchronized (DriverSingleton.class) {
                 localInstance = instance;
-                if (localInstance == null){
+                if (localInstance == null) {
                     instance = localInstance = new DriverSingleton();
                 }
             }
@@ -29,14 +30,16 @@ public class DriverSingleton {
         return localInstance;
     }
 
-    public WebDriver getDriver(Config config){
+    public WebDriver getDriver(Config config) {
         WebDriver driver = webDriver.get();
-        if (driver == null){
-            switch(config) {
+        if (driver == null) {
+            switch (config) {
                 case CHROME:
                     ChromeOptions chromeOptions = new ChromeOptions();
                     chromeOptions.addArguments("--start-maximized");
                     driver = new ChromeDriver(chromeOptions);
+                    driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10));
+                    driver.manage().window().maximize();
                     break;
                 case FF:
                     driver = new FirefoxDriver();

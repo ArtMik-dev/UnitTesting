@@ -1,14 +1,16 @@
 package PageFactory;
 
+import Config.Config;
+import Config.DriverSingleton;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.PageFactory;
 
 public abstract class BaseStepPage {
-    protected WebDriver driver;
+    final WebDriver driver;
     protected String url;
 
-    public BaseStepPage(WebDriver driver) {
-        this.driver = driver;
+    public BaseStepPage() {
+        driver = DriverSingleton.getInstance().getDriver(Config.CHROME);
         PageFactory.initElements(driver, this);
     }
 
