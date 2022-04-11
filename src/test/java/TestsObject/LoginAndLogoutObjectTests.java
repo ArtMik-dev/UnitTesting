@@ -11,6 +11,7 @@ public class LoginAndLogoutObjectTests extends BaseStepObject{
 
     MainPageObject mainPageObject = new MainPageObject(driver);
     public static final String ACCOUNT_NAME = "accountfortestss";
+    public static final String PASSWORD = "accountfortestss1!";
     public static final String LOGIN = "Log in";
 
 
@@ -19,7 +20,7 @@ public class LoginAndLogoutObjectTests extends BaseStepObject{
     @Test
     public void loginWithCorrectCredentials() {
         mainPageObject.goToUrl();
-        String userName = mainPageObject.login("accountfortestss", "accountfortestss1!");
+        String userName = mainPageObject.login(ACCOUNT_NAME, PASSWORD);
         mainPageObject.getUserNameLinkText();
         assertEquals(ACCOUNT_NAME, userName);
     }
@@ -29,7 +30,7 @@ public class LoginAndLogoutObjectTests extends BaseStepObject{
     @Test
     public void logout() {
         mainPageObject.goToUrl();
-        mainPageObject.login("accountfortestss", "accountfortestss1!");
+        mainPageObject.login(ACCOUNT_NAME, PASSWORD);
         mainPageObject.logout();
         String loginLinkText = mainPageObject.getSignIn();
         assertEquals(LOGIN, loginLinkText);
