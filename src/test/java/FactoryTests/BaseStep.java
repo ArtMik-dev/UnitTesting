@@ -16,7 +16,6 @@ public class BaseStep {
     }
     @AfterAll
     public static void destroy(){
-        driver.close();
         driver.quit();
     }
 }

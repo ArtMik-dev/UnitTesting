@@ -10,6 +10,10 @@ import java.util.Optional;
 
 public class DriverSingleton {
 
+    private WebDriver driver;
+
+    private static DriverSingleton DriverSingleton;
+
     private static volatile DriverSingleton instance;
 
     private ThreadLocal<WebDriver> webDriver = new ThreadLocal<>();
@@ -51,5 +55,12 @@ public class DriverSingleton {
                     .ifPresent(dr -> webDriver.set(dr));
         }
         return driver;
+    }
+
+    public void driverClose() {
+        if (DriverSingleton != null) {
+            driver.close();
+            DriverSingleton = null;
+        }
     }
 }
