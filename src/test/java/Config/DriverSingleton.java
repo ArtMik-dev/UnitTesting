@@ -6,13 +6,11 @@ import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.firefox.FirefoxDriver;
 
 import java.time.Duration;
+import java.util.Objects;
 import java.util.Optional;
 
 public class DriverSingleton {
 
-    private WebDriver driver;
-
-    private static DriverSingleton DriverSingleton;
 
     private static volatile DriverSingleton instance;
 
@@ -22,16 +20,10 @@ public class DriverSingleton {
     }
 
     public static DriverSingleton getInstance() {
-        DriverSingleton localInstance = instance;
-        if (localInstance == null) {
-            synchronized (DriverSingleton.class) {
-                localInstance = instance;
-                if (localInstance == null) {
-                    instance = localInstance = new DriverSingleton();
-                }
-            }
+        if (instance == null) {
+            instance = new DriverSingleton();
         }
-        return localInstance;
+        return instance;
     }
 
     public WebDriver getDriver(Config config) {
@@ -42,8 +34,6 @@ public class DriverSingleton {
                     ChromeOptions chromeOptions = new ChromeOptions();
                     chromeOptions.addArguments("--start-maximized");
                     driver = new ChromeDriver(chromeOptions);
-                    driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10));
-                    driver.manage().window().maximize();
                     break;
                 case FF:
                     driver = new FirefoxDriver();
@@ -51,16 +41,19 @@ public class DriverSingleton {
                 default:
                     driver = null;
             }
+            driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10));
+            driver.manage().window().maximize();
             Optional.ofNullable(driver)
                     .ifPresent(dr -> webDriver.set(dr));
         }
         return driver;
     }
 
-    public void driverClose() {
-        if (DriverSingleton != null) {
-            driver.close();
-            DriverSingleton = null;
+    public void closeDriver() {
+        if (Objects.nonNull(webDriver.get())) {
+            webDriver.get().close();
+            webDriver.set(null);
         }
+
     }
 }

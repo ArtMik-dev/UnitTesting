@@ -1,14 +1,9 @@
 package PageFactory;
 
-import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 
 public class MainPage extends BaseStepPage {
-
-    WebDriver driver;
-
-    private final String url = "https://mail.yandex.com/";
 
     @FindBy(css = "a.button2_theme_mail-white")
     private WebElement generalButton;
@@ -28,23 +23,14 @@ public class MainPage extends BaseStepPage {
     @FindBy(css = "a.user-account_left-name>div>img")
     private WebElement userNameLinkLogedIn;
 
-    @FindBy(css = "a.user-account_left-name>span:nth-child(1)")
+    @FindBy(xpath = "//span[@class='user-account__name']/following-sibling::div")
     private WebElement userNameText;
 
-    public MainPage(WebDriver driver) {
-        this.driver = driver;
+    public WebElement getUserNameLinkText() {
+        return userNameText;
     }
 
-    public String getUserNameLinkText() {
-        return userNameText.getText();
-    }
-
-    @Override
-    protected String getUrl() {
-        return url;
-    }
-
-    public MainPage login(String userName, String password) {
+    public HomePage login(String userName, String password) {
         generalButton.click();
         loginField.clear();
         loginField.sendKeys(userName);
@@ -52,6 +38,11 @@ public class MainPage extends BaseStepPage {
 
         passwordField.sendKeys(password);
         submitButton.click();
-        return new MainPage(driver);
+        return new HomePage();
+    }
+
+    @Override
+    protected String getUrl() {
+        return url;
     }
 }

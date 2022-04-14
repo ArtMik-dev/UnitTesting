@@ -1,14 +1,9 @@
 package PageFactory;
 
-import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 
 public class HomePage extends BaseStepPage{
-
-    WebDriver driver;
-
-    private final String url = "https://mail.yandex.com/";
 
     @FindBy(css = "a.user-account_left-name>div>img")
     private WebElement userNameLinkLogedIn;
@@ -19,20 +14,19 @@ public class HomePage extends BaseStepPage{
     @FindBy(id = "passp:sign-in")
     private WebElement signIn;
 
-    public HomePage(WebDriver driver) {
-        this.driver = driver;
-    }
     public String getSignIn() {
         return signIn.getText();
+    }
+
+
+    public MainPage logout() {
+        userNameLinkLogedIn.click();
+        logoutButton.click();
+        return new MainPage();
     }
 
     @Override
     protected String getUrl() {
         return url;
-    }
-    public HomePage logout() {
-        userNameLinkLogedIn.click();
-        logoutButton.click();
-        return new HomePage(driver);
     }
 }

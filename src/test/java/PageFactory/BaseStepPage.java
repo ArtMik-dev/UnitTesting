@@ -7,7 +7,7 @@ import org.openqa.selenium.support.PageFactory;
 
 public abstract class BaseStepPage {
     final WebDriver driver;
-    protected String url;
+    protected String url = "https://mail.yandex.com/";
 
     public BaseStepPage() {
         driver = DriverSingleton.getInstance().getDriver(Config.CHROME);
@@ -16,7 +16,9 @@ public abstract class BaseStepPage {
 
     protected abstract String getUrl();
 
-    public void goToUrl(){
+    public void goToUrl() {
         driver.get(getUrl());
     }
 }
+
+

@@ -54,13 +54,6 @@
             <version>5.8.2</version>
             <scope>test</scope>
         </dependency>
-        <dependency>
-            <groupId>org.iot-dsa</groupId>
-            <artifactId>logging</artifactId>
-            <version>0.24.2</version>
-            <scope>compile</scope>
-        </dependency>
-
     </dependencies>
 
 
