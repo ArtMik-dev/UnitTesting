@@ -5,6 +5,8 @@ import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.firefox.FirefoxDriver;
 
+import java.time.Duration;
+import java.util.Objects;
 import java.util.Optional;
 
 public class DriverSingleton {
@@ -13,26 +15,22 @@ public class DriverSingleton {
 
     private ThreadLocal<WebDriver> webDriver = new ThreadLocal<>();
 
-    private DriverSingleton(){
+    private DriverSingleton() {
     }
 
-    public static DriverSingleton getInstance(){
-        DriverSingleton localInstance = instance;
-        if (localInstance == null) {
-            synchronized (DriverSingleton.class) {
-                localInstance = instance;
-                if (localInstance == null){
-                    instance = localInstance = new DriverSingleton();
-                }
-            }
+    public static DriverSingleton getInstance() {
+
+        if (instance == null) {
+            instance = new DriverSingleton();
+
         }
-        return localInstance;
+        return instance;
     }
 
-    public WebDriver getDriver(Config config){
+    public WebDriver getDriver(Config config) {
         WebDriver driver = webDriver.get();
-        if (driver == null){
-            switch(config) {
+        if (driver == null) {
+            switch (config) {
                 case CHROME:
                     ChromeOptions chromeOptions = new ChromeOptions();
                     chromeOptions.addArguments("--start-maximized");
@@ -44,9 +42,18 @@ public class DriverSingleton {
                 default:
                     driver = null;
             }
+            driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10));
+            driver.manage().window().maximize();
             Optional.ofNullable(driver)
                     .ifPresent(dr -> webDriver.set(dr));
         }
         return driver;
+    }
+
+    public void closeDriver() {
+        if (Objects.nonNull(webDriver.get())) {
+            webDriver.get().close();
+            webDriver.set(null);
+        }
     }
 }

@@ -1,5 +1,6 @@
 package TestsObject;
 
+import PageObject.HomePageObject;
 import PageObject.MainPageObject;
 import jdk.jfr.Description;
 import org.junit.jupiter.api.Tag;
@@ -9,7 +10,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class LoginAndLogoutObjectTests extends BaseStepObject{
 
-    MainPageObject mainPageObject = new MainPageObject(driver);
+    MainPageObject mainPageObject = new MainPageObject();
     public static final String ACCOUNT_NAME = "accountfortestss";
     public static final String PASSWORD = "accountfortestss1!";
     public static final String LOGIN = "Log in";
@@ -20,8 +21,8 @@ public class LoginAndLogoutObjectTests extends BaseStepObject{
     @Test
     public void loginWithCorrectCredentials() {
         mainPageObject.goToUrl();
-        String userName = mainPageObject.login(ACCOUNT_NAME, PASSWORD);
-        mainPageObject.getUserNameLinkText();
+        mainPageObject.login(ACCOUNT_NAME, PASSWORD);
+        String userName = mainPageObject.getUserNameLinkText();
         assertEquals(ACCOUNT_NAME, userName);
     }
 
@@ -31,7 +32,8 @@ public class LoginAndLogoutObjectTests extends BaseStepObject{
     public void logout() {
         mainPageObject.goToUrl();
         mainPageObject.login(ACCOUNT_NAME, PASSWORD);
-        mainPageObject.logout();
+        HomePageObject homePageObject = new HomePageObject();
+        homePageObject.logout();
         String loginLinkText = mainPageObject.getSignIn();
         assertEquals(LOGIN, loginLinkText);
     }
