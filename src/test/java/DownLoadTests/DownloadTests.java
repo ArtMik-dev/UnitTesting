@@ -6,25 +6,22 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
-import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.WebDriverWait;
+import org.openqa.selenium.support.ui.FluentWait;
 
 import java.io.File;
 import java.time.Duration;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Objects;
 
 public class DownloadTests extends BaseTest{
 
     private static final String PATH_TO_FOLDER = System.getProperty("user.dir") + "\\src\\test\\java\\Selenium\\Files";
 
-    private static final String START_URL = "https://file-examples.com/index.php/sample-documents-download/sample-doc-download/";
+    private static final String START_URL = "https://www.learningcontainer.com/sample-pdf-files-for-testing/";
+    private static final String PDF_FIRST = "//a[contains(@data-downloadurl, 'sample-pdf-file-for-testing')]";
 
     private WebDriver driver;
     private File folder;
-    private File file;
-    private File[] listOfFiles;
     private boolean isFound;
 
     @BeforeEach
@@ -36,7 +33,9 @@ public class DownloadTests extends BaseTest{
     @AfterEach
     void setDown() {
         driver.close();
-        for (File file : Objects.requireNonNull(folder.listFiles())) {
+        File path = new File(PATH_TO_FOLDER);
+        File[] files = path.listFiles();
+        for (File file : files) {
             file.delete();
         }
     }
@@ -45,15 +44,26 @@ public class DownloadTests extends BaseTest{
     @Test
     void fileDownloadChrome() throws InterruptedException {
         ChromeOptions options = new ChromeOptions();
-        Map<String, Object> prefs = new HashMap<>();
+        options.addArguments("start-maximized");
+        Map<String, Object> prefs = new HashMap<String, Object>();
         prefs.put("download.default_directory", PATH_TO_FOLDER);
         options.setExperimentalOption("prefs", prefs);
 
         driver = new ChromeDriver(options);
         driver.get(START_URL);
-        new WebDriverWait(driver, Duration.ofSeconds(10)).until(ExpectedConditions.elementToBeClickable(By.cssSelector("a[href*='.docx']"))).click();
-        //driver.findElement(By.xpath("//*[text()='Download sample DOC file']")).click();
-        Thread.sleep(15000);
+
+        driver.findElement(By.cssSelector("div#ezmobfooter>center>div>span")).click();
+        Thread.sleep(5000);
+        driver.findElement(By.xpath("//a[contains(@data-cc-event, 'click:dismiss')]")).click();
+        Thread.sleep(5000);
+
+        driver.findElement(By.xpath(PDF_FIRST)).click();
+
+        File file = new File(PATH_TO_FOLDER);
+        FluentWait<WebDriver> wait = new FluentWait<WebDriver>(driver)
+                .withTimeout(Duration.ofSeconds(25))
+                .pollingEvery(Duration.ofMillis(100));
+        wait.until( x -> file.exists());
         checkFileInFolder(PATH_TO_FOLDER);
 
         Assertions.assertTrue(isFound, "Downloaded file is not found");
@@ -61,20 +71,8 @@ public class DownloadTests extends BaseTest{
 
     public void checkFileInFolder(String path) {
         folder = new File(path);
-        listOfFiles = folder.listFiles();
-        isFound = false;
-        file = null;
-
-        assert listOfFiles != null;
-        for (File listOfFile : listOfFiles) {
-            if (listOfFile.isFile()) {
-                String fileName = listOfFile.getName();
-                System.out.println("File " + listOfFile.getName());
-                if (fileName.contains("samplefile")) {
-                    file = new File(fileName);
-                    isFound = true;
-                }
-            }
-        }
+        File[] listOfFiles = folder.listFiles();
+        if (listOfFiles != null)
+        isFound = true;
     }
 }
