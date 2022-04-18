@@ -20,7 +20,7 @@ public class MainPageObject extends BasePageObject {
     private final static By LOGOUT_BUTTON = By.cssSelector("a.legouser__menu-item_action_exit");
     private final static By USER_NAME_IN_LOG_IN = By.cssSelector("a.user-account_left-name>div>img");
 
-    private final static By USER_NAME_TEXT = By.cssSelector("a.user-account_left-name>span:nth-child(1)");
+    private final static By USER_NAME_TEXT = By.xpath("//span[@class='user-account__name']/following-sibling::div");
 
 
     public String getUserNameLinkText(){

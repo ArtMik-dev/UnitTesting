@@ -12,7 +12,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @ExtendWith(TestListener.class)
 
-public class LoginAndLogoutObjectTests extends BaseStepObject{
+public class LoginAndLogoutObjectTests{
 
     MainPageObject mainPageObject = new MainPageObject();
     public static final String ACCOUNT_NAME = "accountfortestss";
@@ -56,6 +56,5 @@ public class LoginAndLogoutObjectTests extends BaseStepObject{
         String userName = mainPageObject.login(ACCOUNT_NAME_INCORRECT, PASSWORD);
         mainPageObject.getUserNameLinkText();
         assertEquals(ACCOUNT_NAME, userName);
-        takeScreenShoot();
     }
 }

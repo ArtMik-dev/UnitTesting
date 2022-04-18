@@ -43,6 +43,7 @@ public class TestListener implements TestWatcher {
         getBrowserCapabilities();
         captureScreenshot(extensionContext.getDisplayName());
         setAllureEnvironment(browserName, browserVersion);
+        System.out.println(browserName + " " + browserVersion);
         DriverSingleton.getInstance().closeDriver();
     }
 
