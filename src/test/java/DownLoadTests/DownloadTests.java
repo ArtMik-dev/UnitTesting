@@ -6,6 +6,8 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
+import org.openqa.selenium.firefox.FirefoxDriver;
+import org.openqa.selenium.firefox.FirefoxOptions;
 import org.openqa.selenium.support.ui.FluentWait;
 
 import java.io.File;
@@ -27,6 +29,7 @@ public class DownloadTests extends BaseTest{
     @BeforeEach
     void setUp() {
         WebDriverManager.chromedriver().setup();
+        WebDriverManager.firefoxdriver().setup();
         createNewFolder("src/test/java/Selenium/Files/");
     }
 
@@ -50,6 +53,36 @@ public class DownloadTests extends BaseTest{
         options.setExperimentalOption("prefs", prefs);
 
         driver = new ChromeDriver(options);
+        driver.get(START_URL);
+
+        driver.findElement(By.cssSelector("div#ezmobfooter>center>div>span")).click();
+        Thread.sleep(5000);
+        driver.findElement(By.xpath("//a[contains(@data-cc-event, 'click:dismiss')]")).click();
+        Thread.sleep(5000);
+
+        driver.findElement(By.xpath(PDF_FIRST)).click();
+
+        File file = new File(PATH_TO_FOLDER);
+        FluentWait<WebDriver> wait = new FluentWait<WebDriver>(driver)
+                .withTimeout(Duration.ofSeconds(25))
+                .pollingEvery(Duration.ofMillis(100));
+        wait.until( x -> file.exists());
+        checkFileInFolder(PATH_TO_FOLDER);
+
+        Assertions.assertTrue(isFound, "Downloaded file is not found");
+    }
+
+    @DisplayName("Download file with Firefox")
+    @Test
+    void fileDownloadFirefox() throws InterruptedException {
+        FirefoxOptions options = new FirefoxOptions();
+        options.addPreference("pdfjs.disabled", true);
+        options.addPreference("browser.helperApps.neverAsk.saveToDisk", "application/octet-stream");
+        options.addPreference("browser.download.manager.showWhenStarting", false);
+        options.addPreference("browser.download.dir", PATH_TO_FOLDER);
+        options.addPreference("browser.download.folderList", 2);
+
+        driver = new FirefoxDriver(options);
         driver.get(START_URL);
 
         driver.findElement(By.cssSelector("div#ezmobfooter>center>div>span")).click();
