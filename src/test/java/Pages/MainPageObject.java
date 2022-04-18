@@ -1,11 +1,9 @@
 package Pages;
 
 import org.openqa.selenium.By;
-import org.openqa.selenium.WebDriver;
 
 public class MainPageObject extends BasePageObject {
 
-    private final String url = "https://mail.yandex.com/";
 
     private static final By GENERAL_BUTTON = By.cssSelector("a.button2_theme_mail-white");
 
@@ -25,9 +23,6 @@ public class MainPageObject extends BasePageObject {
     private final static By USER_NAME_TEXT = By.cssSelector("a.user-account_left-name>span:nth-child(1)");
 
 
-    public MainPageObject(WebDriver driver) {
-        super(driver);
-    }
     public String getUserNameLinkText(){
         return driver.findElement(USER_NAME_TEXT).getText();
     }

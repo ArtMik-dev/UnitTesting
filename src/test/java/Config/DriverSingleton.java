@@ -1,52 +1,43 @@
 package Config;
 
+import io.github.bonigarcia.wdm.WebDriverManager;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
-import org.openqa.selenium.chrome.ChromeOptions;
-import org.openqa.selenium.firefox.FirefoxDriver;
 
-import java.util.Optional;
+import java.time.Duration;
+
 
 public class DriverSingleton {
 
-    private static volatile DriverSingleton instance;
+    private WebDriver driver;
+    private static DriverSingleton DriverSingleton;
 
-    private ThreadLocal<WebDriver> webDriver = new ThreadLocal<>();
+    private DriverSingleton() {
 
-    private DriverSingleton(){
     }
 
-    public static DriverSingleton getInstance(){
-        DriverSingleton localInstance = instance;
-        if (localInstance == null) {
-            synchronized (DriverSingleton.class) {
-                localInstance = instance;
-                if (localInstance == null){
-                    instance = localInstance = new DriverSingleton();
-                }
-            }
+    public static DriverSingleton getInstance() {
+        if (DriverSingleton == null) {
+            DriverSingleton = new DriverSingleton();
         }
-        return localInstance;
+        return DriverSingleton;
     }
 
-    public WebDriver getDriver(Config config){
-        WebDriver driver = webDriver.get();
-        if (driver == null){
-            switch(config) {
-                case CHROME:
-                    ChromeOptions chromeOptions = new ChromeOptions();
-                    chromeOptions.addArguments("--start-maximized");
-                    driver = new ChromeDriver(chromeOptions);
-                    break;
-                case FF:
-                    driver = new FirefoxDriver();
-                    break;
-                default:
-                    driver = null;
-            }
-            Optional.ofNullable(driver)
-                    .ifPresent(dr -> webDriver.set(dr));
+    public WebDriver getDriver() {
+        if (driver == null) {
+            WebDriverManager.chromedriver().setup();
+            driver = new ChromeDriver();
+            driver.manage().window().maximize();
+            driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10));
+            return driver;
         }
         return driver;
+    }
+
+    public void closeDriver() {
+        if (DriverSingleton != null) {
+            driver.close();
+            DriverSingleton = null;
+        }
     }
 }
