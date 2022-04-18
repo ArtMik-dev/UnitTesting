@@ -20,15 +20,14 @@ public class LoginAndLogoutTests extends BaseStep{
     public void loginWithCorrectCredentials() {
         mainPage.goToUrl();
         mainPage.login(ACCOUNT_NAME, PASSWORD);
-        String userName = mainPage.getUserNameLinkText().getText();
+        String userName = mainPage.getUserNameLinkText();
         Assertions.assertEquals(ACCOUNT_NAME, userName," ");
     }
 
     @Test
     public void logout() {
         mainPage.goToUrl();
-        mainPage.login(ACCOUNT_NAME, PASSWORD);
-        HomePage homePage = new HomePage();
+        HomePage homePage = mainPage.login(ACCOUNT_NAME, PASSWORD);
         homePage.logout();
         String loginLinkText = homePage.getSignIn();
         assertEquals(LOGIN, loginLinkText);

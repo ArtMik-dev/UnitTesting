@@ -26,8 +26,9 @@ public class MainPage extends BaseStepPage {
     @FindBy(xpath = "//span[@class='user-account__name']/following-sibling::div")
     private WebElement userNameText;
 
-    public WebElement getUserNameLinkText() {
-        return userNameText;
+    public String getUserNameLinkText() {
+
+        return userNameText.getText();
     }
 
     public HomePage login(String userName, String password) {
